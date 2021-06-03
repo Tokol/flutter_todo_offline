@@ -56,37 +56,49 @@ class DB {
     var raw = await _db.rawInsert(
         "INSERT Into $TABLE_NAME ($TABLE_ROW_ID, $TABLE_ROW_TASKNAME, $TABLE_ROW_ISCOMPLETE) "
             "VALUES (?,?,?)",
-        [id, task.taskName, task.isComlete==true?"true":"false"]
+        [id, task.taskName, task.isComlete == true ? "true" : "false"]
     );
 
     return raw;
   }
 
 
-static Future<List<TODO>> getTodods() async {
+  static Future<List<TODO>> getTodods() async {
     var res = await _db.query("$TABLE_NAME");
 
     List<TODO> todos = [];
-    if( res.isNotEmpty){
-      for (int i=0; i<res.length; i++){
+    if (res.isNotEmpty) {
+      for (int i = 0; i < res.length; i++) {
         todos.add(TODO(
+          id: res[i]["$TABLE_ROW_ID"],
           taskName: res[i]["$TABLE_ROW_TASKNAME"],
-          isComlete: res[i]["$TABLE_ROW_ISCOMPLETE"]=="true"? true:false,
+          isComlete: res[i]["$TABLE_ROW_ISCOMPLETE"] == "true" ? true : false,
 
         ));
-
       }
 
       return todos;
     }
 
-    else{
+    else {
       print("no Data");
     }
+  }
 
 
+  static Future<int> update(TODO task) async {
+    var result = await _db.update(
+        TABLE_NAME, task.toMap(), where: '$TABLE_ROW_ID = ?',
+        whereArgs: [task.id]);
+    return result;
+  }
 
-}
 
+  static Future<int> delete(int id) async {
+    var result = await _db.delete(
+        TABLE_NAME, where: '$TABLE_ROW_ID = ?', whereArgs: [id]);
+
+    return result;
+  }
 
 }

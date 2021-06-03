@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_offline/edit_screen.dart';
+import 'package:flutter_app_offline/setting_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'database/database.dart';
 import 'model/to_do.dart';
@@ -18,16 +21,24 @@ class _TODOAppState extends State<TODOApp> {
   String taskNameValue = "";
 
 
+  String appTitle="";
 
 
 
 Future<List<TODO>> getTodos() async {
 
   todoList =  await DB.getTodods();
+
   setState(() {
 
   });
-  return todoList;
+
+ if(todoList!=null){
+   return todoList;
+
+ }
+
+    return null;
 
 
   }
@@ -36,7 +47,32 @@ Future<List<TODO>> getTodos() async {
   @override
   void initState() {
     getTodos();
+    getuserPref();
+
     super.initState();
+  }
+
+
+  getuserPref() async {
+
+       SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      String langPref =  prefs.getString("lang")?? "Eng";
+
+
+    if(langPref=="Eng"){
+      appTitle = "TODO";
+    }
+
+    else if (langPref=="Nep"){
+      appTitle = "गर्नु पर्ने";
+    }
+
+
+    setState(() {
+
+    });
+
   }
 
 
@@ -44,7 +80,7 @@ Future<List<TODO>> getTodos() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('TODO'),
+      appBar: AppBar(title: Text(appTitle),
       actions:[
                 IconButton(icon: Icon(Icons.add),onPressed: (){
 
@@ -54,6 +90,20 @@ Future<List<TODO>> getTodos() async {
 
 
     },),
+
+
+        IconButton(icon: Icon(Icons.settings),onPressed: () async {
+
+             await Navigator.push(context, MaterialPageRoute(builder: (context)=> SettingScreen(
+
+
+
+
+             )));
+
+              getuserPref();
+        },),
+
 
       ],
 
@@ -113,14 +163,48 @@ Future<List<TODO>> getTodos() async {
 
           Expanded(
             child: Container(
-              child:ListView.builder(itemBuilder: (context, position){
+              child:todoList!=null ?ListView.builder(
 
-                return Container(
-                  child: Text(todoList[position].taskName),
 
-                );
+                itemBuilder: (context, position){
 
-              }, itemCount: todoList.length,),
+                  return Container(
+                      child: Column(children: [
+
+                        Text(todoList[position].taskName),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+
+                            IconButton(icon: Icon(Icons.edit), onPressed: () async {
+
+                            var response =  await   Navigator.push(context, MaterialPageRoute(builder: (context)=> EditScreen(
+                                todo:todoList[position],
+
+                              )));
+
+                                getTodos();
+
+                            }),
+                            IconButton(icon: Icon(Icons.delete), onPressed: () async {
+
+                              await DB.delete(todoList[position].id);
+                              getTodos();
+
+                            }),
+
+
+                          ],)
+
+
+                      ],)
+
+
+
+                  );
+
+                }, itemCount: todoList.length):Container()
 
 
             ),
