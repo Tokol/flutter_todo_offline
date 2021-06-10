@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1028561386842",
+    "project_id": "fir-mindrise",
+    "storage_bucket": "fir-mindrise.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028561386842:android:426cf3f95ca1c6fffa8763",
+        "android_client_info": {
+          "package_name": "com.mind.flutter_app_offline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1028561386842-fpsjnc8rnvq23823rtfh6jq2aliv6ucg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPU2QkQ32HqugXx3CxSJH0h1fejIhT_Sk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1028561386842-fpsjnc8rnvq23823rtfh6jq2aliv6ucg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
