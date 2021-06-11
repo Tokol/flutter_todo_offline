@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'database/database.dart';
@@ -5,7 +6,8 @@ import 'model/to_do.dart';
 
 class EditScreen extends StatefulWidget {
   final TODO todo;
-  EditScreen({this.todo});
+  String documentId;
+  EditScreen({this.todo, this.documentId});
 
   @override
   _EditScreenState createState() => _EditScreenState();
@@ -14,7 +16,7 @@ class EditScreen extends StatefulWidget {
 class _EditScreenState extends State<EditScreen> {
 
   String todoTask;
-
+  FirebaseFirestore _store = FirebaseFirestore.instance;
 
 
   @override
@@ -30,6 +32,10 @@ class _EditScreenState extends State<EditScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Edit'),),
       body: Column(
+
+
+
+
         children: [
           TextField(
             decoration: InputDecoration(
@@ -45,12 +51,14 @@ class _EditScreenState extends State<EditScreen> {
 
 
           IconButton(icon: Icon(Icons.add),onPressed: () async {
-            TODO todo = TODO(taskName: todoTask, isComlete:widget.todo.isComlete, id: widget.todo.id );
+            TODO todo = TODO(taskName: todoTask, isComlete:widget.todo.isComlete);
+            await _store.collection("todo").doc(widget.documentId).update({
+              "name":todoTask,
+               "isComplete":false,
+            });
 
 
-          await DB.update(todo);
-
-            Navigator.pop(context);
+              Navigator.pop(context);
 
 
           },),

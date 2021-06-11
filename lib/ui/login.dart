@@ -59,6 +59,8 @@ bool loading = false;
                         
                         try{
                           var user = await _auth.signInWithEmailAndPassword(email: username, password: password);
+
+
                           setState(() {
                             loading=false;
                           });
